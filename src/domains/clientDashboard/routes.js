@@ -24,21 +24,27 @@ router.put("/", auth, async (req, res) => {
         );
         if (isPasswordMatched && newPassword === confirmPassword) {
           const hashedPassword = await bcrypt.hash(newPassword, 10);
+          const hashedPassword1 = await bcrypt.hash(confirmPassword, 10);
 
           // Update the Password and ConfirmPassword fields of the registered user
           registeredUser.password = hashedPassword;
-          registeredUser.confirmPassword = hashedPassword;
+          registeredUser.confirmPassword = hashedPassword1;
+
+          await ClientDashboard.create({
+            UserId: req.params.id,
+            CurrentPassword: currentPassword,
+            NewPassword: hashedPassword,
+            ConfirmPassword: hashedPassword1,
+          });
 
           await registeredUser.save();
 
-          //   await ClientDashboard.create({
-          //     UserId: req.user._id,
-          //     CurrentPassword: currentPassword,
-          //     NewPassword: hashedPassword,
-          //     ConfirmPassword: hashedPassword,
-          //   });
+          console.log(registeredUser);
 
-          res.status(200).json({ message: "Password changed successfully!" });
+          res.status(200).json({
+            registeredUser,
+            message: "Password changed successfully!",
+          });
         } else {
           res.status(400).send("Invalid Password");
         }

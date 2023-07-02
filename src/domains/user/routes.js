@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
+// const axios = require("axios");
 require("dotenv").config();
 const { createNewUser, authenticateUser } = require("./controller");
 
@@ -22,6 +23,7 @@ router.get("/private_data", auth, async (req, res) => {
   // const token = req.cookies.jwt;
   // res.status(200).json(req.user);
   // console.log(`Email:  ${req.user.email}`);
+  console.log("User is Authorized to a Private_Page");
   res.status(200).json({ message: "User is Authorized to a Private_Page" });
 });
 
@@ -35,6 +37,7 @@ router.post("/login", async (req, res) => {
     ) {
       const token = jwt.sign({ email: req.body.email, role: "admin" }, "91299");
       res.status(200).json({ token, message: "you are logged in as admin" });
+
       return;
     } else {
       let { email, password } = req.body;
@@ -48,7 +51,7 @@ router.post("/login", async (req, res) => {
       const authenticatedUser = await authenticateUser({ email, password });
 
       const token = await authenticatedUser.generateToken();
-      console.log("this is token :" + token);
+      // console.log("this is token :" + token);
 
       res
         .status(200)

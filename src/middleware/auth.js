@@ -1,4 +1,5 @@
 const express = require("express");
+
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 const User = require("./../domains/user/model");
@@ -6,6 +7,7 @@ require("dotenv").config();
 
 const verifyToken = async (req, res, next) => {
   // verify token
+
   try {
     const token = req.cookies.jwt;
     console.log(token);
